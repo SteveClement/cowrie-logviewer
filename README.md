@@ -25,8 +25,7 @@ cp conf.py.example conf.py
 # Prerequisites
 
 ```
-pip install -r requirements.txt
-mkvirtualenv venv
+virtualenv venv
 ./venv/bin/pip install -r requirements.txt
 ```
 
