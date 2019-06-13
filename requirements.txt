@@ -1,4 +1,5 @@
 flask
+Flask-BasicAuth
 ipapi
 pycountry
 path.py

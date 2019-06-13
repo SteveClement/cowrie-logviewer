@@ -7,4 +7,7 @@ bind_port = 5000
 min_upload_size = 1024
 debug = False
 use_gzip = True
+use_auth = False
+auth_user = 'cowrie'
+auth_pass = 'Password1234!'
 filter_events = [ 'cowrie.direct-tcpip.request', 'cowrie.direct-tcpip.data' ]

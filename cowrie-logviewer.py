@@ -16,6 +16,7 @@ import pycountry
 from conf import *
 from flask import Flask, render_template, send_from_directory
 from flask_compress import Compress
+from flask_basicauth import BasicAuth
 from path import Path
 
 version = '0.2.0'
@@ -56,6 +57,16 @@ conn.close()
 #: flask routes
 
 app = Flask(__name__, static_url_path = '')
+
+if use_auth:
+    app.config['BASIC_AUTH_USERNAME'] = auth_user
+    app.config['BASIC_AUTH_PASSWORD'] = auth_pass
+
+    basic_auth = BasicAuth(app)
+
+    app.config['BASIC_AUTH_FORCE'] = True
+
+
 if(use_gzip):
 	Compress(app)
 try:
