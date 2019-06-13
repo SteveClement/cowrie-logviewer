@@ -1,8 +1,16 @@
 language: python
 python:
-- '2.7'
-- '3.4'
-- '3.6'
-- '3.7'
+  - "2.7"
+  - "3.4"
+  - "3.6"
+  - "3.7"
+  - "3.7-dev"
+  - "3.8-dev"
+  - "nightly"
 
-script: python cowrie-logviewer.py test
+  install:
+    - pip install -r requirements.txt
+    - cp conf.py.example conf.py
+
+script:
+  - python cowrie-logviewer.py test
