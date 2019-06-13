@@ -1,0 +1,10 @@
+sqlite_file = 'cowrie-logviewer.sqlite'
+log_path = '../cowrie/var/log/cowrie'
+dl_path = '../cowrie/var/lib/cowrie/downloads'
+maxmind_path = 'maxmind/GeoLite2-Country.mmdb'
+bind_host = '0.0.0.0'
+bind_port = 5000
+min_upload_size = 1024
+debug = False
+use_gzip = True
+filter_events = [ 'cowrie.direct-tcpip.request', 'cowrie.direct-tcpip.data' ]

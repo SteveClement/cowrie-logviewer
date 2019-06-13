@@ -1,33 +1,22 @@
 #!/usr/bin/env python
 
-#: A simple log viewer for cowrie 
+#: A simple log viewer for cowrie
 #: Copyright 2017 by Richard 'mindphluxnet' Kaemmerer (richard@richardkaemmerer.de)
 
-from flask import Flask, render_template, send_from_directory
-import sys
 import json
-import geoip2.database
-import sqlite3
-import dateutil.parser
-import pycountry
-from path import Path
-from flask_compress import Compress
 import os.path
+import sqlite3
+import sys
 import time
 
-#: change stuff here
-sqlite_file = 'cowrie-logviewer.sqlite'
-log_path = '../cowrie/log'
-dl_path = '../cowrie/dl'
-maxmind_path = 'maxmind/GeoLite2-Country.mmdb'
-bind_host = '0.0.0.0'
-bind_port = 5000
-min_upload_size = 1024
-debug = False
-use_gzip = True
-filter_events = [ 'cowrie.direct-tcpip.request', 'cowrie.direct-tcpip.data' ]
+import dateutil.parser
 
-#: don't change stuff beyond this line
+import geoip2.database
+import pycountry
+from conf import *
+from flask import Flask, render_template, send_from_directory
+from flask_compress import Compress
+from path import Path
 
 version = '0.2.0'
 
@@ -131,19 +120,19 @@ def show_stats_userpass():
 
 @app.route('/stats/countries')
 def show_stats_countries():
-	
+
 	conn = sqlite3.connect(sqlite_file)
 	c = conn.cursor()
 
 	page = 'stats-countries'
 
 	c.execute("SELECT countrycode, count(countrycode) AS attack_count FROM ip2country GROUP BY countrycode ORDER BY attack_count DESC")
-	countries = c.fetchall()		
+	countries = c.fetchall()
 
 	out = []
 
 	for country in countries:
-		if(country[0] != 'XX'):
+		if(country[0] != 'XX' and country[0] != None):
 			tmp = [ pycountry.countries.get(alpha_2=country[0]).name, country[0], country[1] ]
 			out.append(tmp)
 		else:
@@ -153,7 +142,7 @@ def show_stats_countries():
 	return render_template('stats_countries.html', countries = out, version = version, page = page)
 
 def get_log_files():
-	
+
 	#: find all json log files
 
 	files = []
@@ -169,7 +158,7 @@ def get_log_files():
 		split_string = f.name.split(".")
 		tmp.append(split_string[2].replace("_", "-"))
 		files.append(tmp)
-	
+
 	return sorted(files)
 
 def get_uploaded_files():
@@ -192,7 +181,7 @@ def render_log(current_logfile):
 	page = 'log'
 
 	logfiles = get_log_files()
-	
+
 	#: connect ip2country db
 
 	conn = sqlite3.connect(sqlite_file)
@@ -205,25 +194,25 @@ def render_log(current_logfile):
 
 	with open(log_path + '/' + current_logfile) as f:
 		for line in f:
-			j = json.loads(line)			
-			
+			j = json.loads(line)
+
 			#: filter out unwanted events
 			if(j['eventid'] in filter_events):
 				continue
 
 			#: check if IP address is already in database first
-			
+
 			c.execute("SELECT countrycode FROM ip2country WHERE ipaddress=?", [ j['src_ip'] ])
 			ip_exists = c.fetchone()
-			if ip_exists:	
+			if ip_exists:
 				j['country'] = ip_exists[0]
 			else:
 				#: look up IP via maxmind geoip
-				try:		
+				try:
 					tmp = reader.country(j['src_ip'])
 					j['country'] = tmp.country.iso_code
 				except Exception:
-					j['country'] = 'XX'			
+					j['country'] = 'XX'
 
 				#: add ip/country pair to db
 				c.execute("INSERT OR IGNORE INTO ip2country(ipaddress, countrycode) VALUES (?, ?)", [ j['src_ip'], j['country'] ])
@@ -234,7 +223,7 @@ def render_log(current_logfile):
 				c.execute("INSERT OR IGNORE INTO loginpass(session, username, password, failed) VALUES (?, ?, ?, ?)", [ j['session'], j['username'], j['password'], 0 ])
 			elif(j['eventid'] == 'cowrie.login.failed'):
 				c.execute("INSERT OR IGNORE INTO loginpass(session, username, password, failed) VALUES (?, ?, ?, ?)", [ j['session'], j['username'], j['password'], 1 ])
-				
+
 
 			#: fix date/time to remove milliseconds and other junk
 			j['datetime'] = str(dateutil.parser.parse(j['timestamp']))
@@ -243,8 +232,8 @@ def render_log(current_logfile):
 
 			data.append(j)
 
-	conn.commit()	
-	conn.close()					
+	conn.commit()
+	conn.close()
 	return render_template('index.html', json = data, logfiles = logfiles, current_logfile = current_logfile, version = version, page = page)
 
 if __name__ == '__main__':

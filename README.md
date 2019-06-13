@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/mindphluxnet/cowrie-logviewer.svg?branch=master)](https://travis-ci.org/mindphluxnet/cowrie-logviewer)
+[![Build Status](https://travis-ci.org/SteveClement/cowrie-logviewer.svg?branch=master)](https://travis-ci.org/SteveClement/cowrie-logviewer)
 
 # cowrie-logviewer
 
@@ -16,22 +16,18 @@ are cached in a sqlite database.
 Assuming you installed cowrie into your home directory:
 
 ```
-su cowrie
-cd ~/../cowrie
-git clone https://github.com/mindphluxnet/cowrie-logviewer
+su - cowrie
+git clone https://github.com/SteveClement/cowrie-logviewer
 cd cowrie-logviewer
-```
-
-If you want, you can make the script executable:
-
-```
-chmod +x cowrie-logviewer.py
+cp conf.py.example conf.py
 ```
 
 # Prerequisites
 
 ```
 pip install -r requirements.txt
+mkvirtualenv venv
+./venv/bin/pip install -r requirements.txt
 ```
 
 # MaxMind GeoLite 2 Country database setup
@@ -46,8 +42,7 @@ rm GeoLite2-Country.mmdb.gz
 
 # Configuration
 
-Edit cowrie-logviewer.py to configure the script. There are several variables at the top of
-the file you can change:
+Edit conf.py to configure the script. There are several variables you can change:
 
 - "log_path" - the path to the cowrie log directory
 - "dl_path" - the path to the cowrie dl (downloads) directory
@@ -62,13 +57,7 @@ the file you can change:
 # Usage
 
 ```
-python cowrie-logviewer.py
-```
-
-or (if you made the script executable)
-
-```
-./cowrie-logviewer.py
+./venv/bin/python cowrie-logviewer.py
 ```
 
 Once it's running, open 
