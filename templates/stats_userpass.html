@@ -2,7 +2,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">    
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Statistics: Usernames and Passwords - Cowrie Log Viewer v{{ version }}</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <link rel="stylesheet" href="/images/style.css">
@@ -17,50 +17,97 @@
     <div class="col-xs-6">
       <div class="table-responsive">
         <table class="table table-condensed table-striped">
-        	<thead>
-		        <th>Username</th>
-	        	<th >Count</th>
-        	</thead>
-        	<tbody>
-        		{% for username in usernames  %}
-        		<tr>
+          <thead>
+            <th>Username successful login</th>
+            <th>Count</th>
+          </thead>
+          <tbody>
+            {% for username in usernames  %}
+            <tr>
               <td>
                 {{ username[0] }}
               </td>
-        			<td>			
-                {{ username[1] }}  
-        			</td>
-        		</tr>
-        		{% endfor %}
-        	</tbody>
+              <td>
+                {{ username[1] }}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
         </table>
        </div>
     </div>
     <div class="col-xs-6">
       <div class="table-responsive">
         <table class="table table-condensed table-striped">
-                <thead>
-                        <th>Password</th>
-                        <th >Count</th>
-                </thead>
-                <tbody>
-                        {% for password in passwords  %}
-                        <tr>
+          <thead>
+            <th>Password</th>
+            <th>Count</th>
+          </thead>
+          <tbody>
+          {% for password in passwords  %}
+          <tr>
+            <td>
+              {% if password[0] == "" %}(empty password){% else %}{{ password[0] }}{% endif %}
+            </td>
+            <td>
+              {{ password[1] }}
+            </td>
+          </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+       </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-6">
+      <div class="table-responsive">
+        <table class="table table-condensed table-striped">
+          <thead>
+            <th>Username failed login</th>
+            <th >Count</th>
+          </thead>
+          <tbody>
+            {% for username_failed in usernames_failed  %}
+            <tr>
               <td>
-                {% if password[0] == "" %}(empty password){% else %}{{ password[0] }}{% endif %}
+                {{ username_failed[0] }}
               </td>
-                                <td>
-                {{ password[1] }}
-                                </td>
-                        </tr>
-                        {% endfor %}
-                </tbody>
+              <td>
+                {{ username_failed[1] }}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+       </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="table-responsive">
+        <table class="table table-condensed table-striped">
+          <thead>
+            <th>Password</th>
+            <th>Count</th>
+          </thead>
+          <tbody>
+          {% for password_failed in passwords_failed  %}
+          <tr>
+            <td>
+              {% if password_failed[0] == "" %}(empty password){% else %}{{ password_failed[0] }}{% endif %}
+            </td>
+            <td>
+              {{ password_failed[1] }}
+            </td>
+          </tr>
+          {% endfor %}
+          </tbody>
         </table>
        </div>
     </div>
   </div>
 </div>
 </div>
+
 </body>
 {% include 'scripts.html' %}
 </html>

@@ -116,7 +116,13 @@ def show_stats_userpass():
 	c.execute("SELECT password, count(password) AS password_count FROM loginpass WHERE failed = 0 GROUP BY password ORDER BY password_count DESC")
 	passwords = c.fetchall()
 
-	return render_template('stats_userpass.html', usernames = usernames, passwords = passwords, version = version, page = page)
+	c.execute("SELECT username, count(username) AS username_count FROM loginpass WHERE failed = 1 GROUP BY username ORDER BY username_count DESC")
+	usernames_failed = c.fetchall()
+
+	c.execute("SELECT password, count(password) AS password_count FROM loginpass WHERE failed = 1 GROUP BY password ORDER BY password_count DESC")
+	passwords_failed = c.fetchall()
+
+	return render_template('stats_userpass.html', usernames = usernames, passwords = passwords, usernames_failed = usernames_failed, passwords_failed = passwords_failed, version = version, page = page)
 
 @app.route('/stats/countries')
 def show_stats_countries():
