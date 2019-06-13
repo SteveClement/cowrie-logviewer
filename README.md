@@ -36,7 +36,6 @@ mkdir maxmind
 cd maxmind
 wget http://geolite.maxmind.com/download/geoip/database/GeoLite2-Country.mmdb.gz
 gunzip GeoLite2-Country.mmdb.gz
-rm GeoLite2-Country.mmdb.gz
 ```
 
 # Configuration
